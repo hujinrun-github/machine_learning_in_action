@@ -54,7 +54,7 @@ def chooseBestFeatureToSplit(dataSet):
             prob = len(subDataSet)/float(len(dataSet))
             newEntropy += prob * calcShannonEng(subDataSet)
         infoGain = baseEntropy - newEntropy
-        if(infoGain > bestInfoGain):
+        if (infoGain > bestInfoGain):
             bestInfoGain = infoGain
             bestFeature = i
     return bestFeature
@@ -80,7 +80,7 @@ def createTree(dataSet, labels):
     bestFeat = chooseBestFeatureToSplit(dataSet)
     bestFeatLabel = labels[bestFeat]
     myTree = {bestFeatLabel: {}}
-    del(labels[bestFeat])
+    del (labels[bestFeat])
     featValues = [example[bestFeat] for example in dataSet]
     uniqueVals = set(featValues)
     for value in uniqueVals:

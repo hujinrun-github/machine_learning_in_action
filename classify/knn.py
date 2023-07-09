@@ -14,7 +14,7 @@ def classify0(inX, dataSet, labels, k):
     dataSetSize = dataSet.shape[0]
     diffMat = tile(inX, (dataSetSize, 1)) - dataSet
     sqDiffMat = diffMat**2
-    sqlDistances = sqDiffMat.sum(axis=1)
+    sqlDistances = sqDiffMat.sum(axis=1)  # add by line
     distances = sqlDistances**0.5
     sortedDistIndices = distances.argsort()  # sort and return the indices
     classCount = {}

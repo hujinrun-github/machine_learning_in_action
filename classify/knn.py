@@ -50,6 +50,7 @@ def file2matrix(fileName, sampleLen, datalen, labelPosition=-1):
             else:
                 # print("ERROR index:{0},istFromLine:{1},lable:{2}".format(
                 # index, listFromLine[0:sampleLen], listFromLine[labelPosition]))
+                
                 classLabelVector.append(int(listFromLine[labelPosition]))
                 index += 1
         returnMat = returnMat[:index, :]

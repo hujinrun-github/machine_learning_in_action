@@ -95,7 +95,8 @@ def createTree(dataSet, labels, featLabels):
     if len(dataSet[0]) == 1:  # 遍历完所有特征时返回出现次数最多的类标签
         return majorityCnt(classList)
     bestFeat = chooseBestFeatureToSplit(dataSet)  # 选择最优特征
-    bestFeatLabel = labels[bestFeat]  # 最优特征的标签
+    print("best feature:%d len labels:%d"%(bestFeat,len(labels)))
+    bestFeatLabel = labels[bestFeat]  # 最优特征的标签, 这里会 list index out of range
     featLabels.append(bestFeatLabel)
     myTree = {bestFeatLabel: {}}  # 根据最优特征的标签生成树
     del (labels[bestFeat])  # 删除已经使用特征标签

@@ -1,8 +1,11 @@
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
 from math import log
 import operator
 
 
-def createDatSet():
+def createDataSet():
+    # 特征值和对应的标签
     dataSet = [
         [1, 1, 'yes'],
         [1, 1, 'yes'],
@@ -11,8 +14,10 @@ def createDatSet():
         [0, 1, 'no']
     ]
 
-    lables = ['no surfacing', 'flippers']
+    lables = ['no surfacing', 'flippers']  # 特征的名称
     return dataSet, lables
+
+# 不同的label取交叉熵
 
 
 def calcShannonEng(dataSet):
@@ -41,20 +46,21 @@ def splitDataSet(dataSet, axis, value):
 
 
 def chooseBestFeatureToSplit(dataSet):
-    numFeatures = len(dataSet[0]) - 1
-    baseEntropy = calcShannonEng(dataSet)
+    numFeatures = len(dataSet[0]) - 1  # 最后一个是标签
+    baseEntropy = calcShannonEng(dataSet)  # 计算信息熵
     bestInfoGain = 0.0
     bestFeature = -1
     for i in range(numFeatures):
         featList = [example[i] for example in dataSet]
-        uniqueVals = set(featList)
+        uniqueVals = set(featList)  # 第i个特征有多少不同的值
         newEntropy = 0.0
         for value in uniqueVals:
-            subDataSet = splitDataSet(dataSet, i, value)
+            # 根据第i个特征分割数据集
+            subDataSet = splitDataSet(dataSet, i, value)  # 第i个特征值为value的记录拿出来
             prob = len(subDataSet)/float(len(dataSet))
-            newEntropy += prob * calcShannonEng(subDataSet)
+            newEntropy += prob * calcShannonEng(subDataSet)  # 求期望
         infoGain = baseEntropy - newEntropy
-        if(infoGain > bestInfoGain):
+        if (infoGain > bestInfoGain):
             bestInfoGain = infoGain
             bestFeature = i
     return bestFeature
@@ -71,20 +77,44 @@ def majorityCnt(classList):
     return sortedClassCount[0][0]
 
 
-def createTree(dataSet, labels):
-    classList = [example[-1] for example in dataSet]
-    if classList.count(classList[0]) == len(classList):
+"""
+Parameters:
+    dataSet - 训练数据集
+    labels - 分类属性标签
+    featLabels - 存储选择的最优特征标签
+Returns:
+    myTree - 决策树
+"""
+# 函数说明:创建决策树
+
+
+def createTree(dataSet, labels, featLabels):
+    classList = [example[-1] for example in dataSet]  # 取分类标签(是否放贷:yes or no)
+    if classList.count(classList[0]) == len(classList):  # 如果类别完全相同则停止继续划分
         return classList[0]
-    if len(dataSet[0]) == 1:
+    if len(dataSet[0]) == 1:  # 遍历完所有特征时返回出现次数最多的类标签
         return majorityCnt(classList)
-    bestFeat = chooseBestFeatureToSplit(dataSet)
-    bestFeatLabel = labels[bestFeat]
-    myTree = {bestFeatLabel: {}}
-    del(labels[bestFeat])
-    featValues = [example[bestFeat] for example in dataSet]
-    uniqueVals = set(featValues)
-    for value in uniqueVals:
-        subLabels = labels[:]
+    bestFeat = chooseBestFeatureToSplit(dataSet)  # 选择最优特征
+    bestFeatLabel = labels[bestFeat]  # 最优特征的标签
+    featLabels.append(bestFeatLabel)
+    myTree = {bestFeatLabel: {}}  # 根据最优特征的标签生成树
+    del (labels[bestFeat])  # 删除已经使用特征标签
+    featValues = [example[bestFeat] for example in dataSet]  # 得到训练集中所有最优特征的属性值
+    uniqueVals = set(featValues)  # 去掉重复的属性值
+    for value in uniqueVals:  # 遍历特征，创建决策树。
         myTree[bestFeatLabel][value] = createTree(
-            splitDataSet(dataSet, bestFeat, value), subLabels)
+            splitDataSet(dataSet, bestFeat, value), labels, featLabels)
     return myTree
+
+
+def classify(inputTree, featLables, testVec):
+    firstStr = inputTree.keys()[0]
+    secondDict = inputTree[firstStr]
+    featIndex = featLables.index(firstStr)
+    for key in secondDict.keys():
+        if testVec[featIndex] == key:
+            if type(secondDict[key]).__name__ == 'dict':
+                classLabel = classify(secondDict[key], featLables, testVec)
+            else:
+                classLabel = secondDict[key]
+    return classLabel

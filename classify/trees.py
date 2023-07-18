@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 from math import log
+import pickle
 import operator
 
 
@@ -103,8 +104,9 @@ def createTree(dataSet, labels, featLabels):
     featValues = [example[bestFeat] for example in dataSet]  # 得到训练集中所有最优特征的属性值
     uniqueVals = set(featValues)  # 去掉重复的属性值
     for value in uniqueVals:  # 遍历特征，创建决策树。
+        subLabels = labels[:]
         myTree[bestFeatLabel][value] = createTree(
-            splitDataSet(dataSet, bestFeat, value), labels, featLabels)
+            splitDataSet(dataSet, bestFeat, value), subLabels, featLabels)
     return myTree
 
 
@@ -119,3 +121,12 @@ def classify(inputTree, featLables, testVec):
             else:
                 classLabel = secondDict[key]
     return classLabel
+
+def storeTree(inputTree, filename):
+    fw = open(filename,'w')
+    pickle.dump(inputTree, fw)
+    fw.close()
+
+def grapTree(filename):
+    fr = open(filename)
+    return pickle.load(fr)

@@ -19,4 +19,13 @@ from numpy import *
 # print(myTree)
 # print(featLabels)
 # trees_plot.createPlot(myTree)
-tree_apply.classifyHomeData("./dataSet/home-data-for-ml-course/train.csv")
+# tree_apply.classifyHomeData("./dataSet/spaceship-titanic/train.csv")
+
+# test glass classify
+fr = open("./dataSet/lenses.txt")
+lenses = [inst.strip().split("\t") for inst in fr.readlines()]
+print(lenses)
+lensesLabels=['age', 'prescript', 'astigmatic', 'tearRate']
+featLabels = []
+lensesTree = trees.createTree(lenses, lensesLabels, featLabels)
+trees_plot.createPlot(lensesTree)

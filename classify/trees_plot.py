@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from . import trees
 
 decisionNode = dict(boxstyle="sawtooth", fc="0.8")
-leafNode = dict(boxstyle="roud4", fc="0.8")
+leafNode = dict(boxstyle="round4", fc="0.8")
 arrow_args = dict(arrowstyle="<-")
 
 
@@ -48,6 +48,7 @@ Returns:
 def plotNode(nodeTxt, centerPt, parentPt, nodeType):
     arrow_args = dict(arrowstyle="<-")  # 定义箭头格式
     # font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)    #设置中文字体
+    # print("nodeTxt:{}, centerPtr:{}, parentPt:{}, nodeType:{}".format(nodeTxt, centerPt, parentPt, nodeType))
     createPlot.ax1.annotate(nodeTxt, xy=parentPt,  xycoords='axes fraction',  # 绘制结点
                             xytext=centerPt, textcoords='axes fraction',
                             va="center", ha="center", bbox=nodeType, arrowprops=arrow_args)
@@ -94,7 +95,7 @@ def plotTree(myTree, parentPt, nodeTxt):
     plotNode(firstStr, cntrPt, parentPt, decisionNode)  # 绘制结点
     secondDict = myTree[firstStr]  # 下一个字典，
     # 也就是继续绘制子结点
-    plotTree.yOff = plotTree.yOff - 1.0/plotTree.totalD  # y偏移
+    plotTree.yOff = plotTree.yOff - 0.5/plotTree.totalD  # y偏移
     for key in secondDict.keys():
         if type(secondDict[key]).__name__ == 'dict':  # 测试该结点是否为字典，
             # 如果不是字典，
@@ -107,7 +108,7 @@ def plotTree(myTree, parentPt, nodeTxt):
             plotNode(secondDict[key], (plotTree.xOff,
                      plotTree.yOff), cntrPt, leafNode)
             plotMidText((plotTree.xOff, plotTree.yOff), cntrPt, str(key))
-    plotTree.yOff = plotTree.yOff + 1.0/plotTree.totalD
+    plotTree.yOff = plotTree.yOff + 0.5/plotTree.totalD
 
 
 """
@@ -120,14 +121,14 @@ Returns:
 
 
 def createPlot(inTree):
-    fig = plt.figure(1, facecolor='white')  # 创建fig
+    fig = plt.figure(1, facecolor='white', figsize=(10, 10))  # 创建fig
     fig.clf()  # 清空fig
     axprops = dict(xticks=[], yticks=[])
     createPlot.ax1 = plt.subplot(111, frameon=False, **axprops)  # 去掉x、y轴
     plotTree.totalW = float(getNumLeafs(inTree))  # 获取决策树叶结点数目
     plotTree.totalD = float(getTreeDepth(inTree))  # 获取决策树层数
     plotTree.xOff = -0.5/plotTree.totalW  # w = 3, xOff = -0.5/3
-    plotTree.yOff = 1.0  # x偏移
+    plotTree.yOff = 1.0  # y偏移
     plotTree(inTree, (0.5, 1.0), '')  # 绘制决策树
     plt.show()  # 显示绘制结果
 

@@ -1,12 +1,13 @@
-from . import trees
+from . import trees, trees_plot
 import pandas as pd
 import numpy as np
 
 def classifyHomeData(filePath):
     homeData =  pd.read_csv(filePath)
-    y = homeData["SalePrice"]
+    y = homeData["Transported"]
     # choose 10 features
-    features = ["MSSubClass", "MSZoning", "LotFrontage", "LandSlope", "LotShape","YearBuilt", "Heating", "1stFlrSF", "2ndFlrSF", "FullBath", "HalfBath"]
+    features = ["PassengerId", "HomePlanet", "CryoSleep", "Cabin", "Destination",
+                "Age", "VIP", "RoomService", "FoodCourt", "ShoppingMall", "Spa"]
     X = homeData[features]
 
     y_list = y.values.tolist()
@@ -20,8 +21,8 @@ def classifyHomeData(filePath):
     # print(" ".join(str(i) for i in dataSet))
     featLabels = []
     myTree = trees.createTree(dataSet, labels, featLabels)
-
-    print(myTree)
+    trees_plot.createPlot(myTree)
+    # print(myTree)
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@ def test_simple_bayes():
     print(pAb)
 
 # bayes.testingNB()
-bayes.spamTest()
+# bayes.spamTest()
+bayes.rssTest()
 # bayes.textParse("dfa dfasdffa dfasdf dfasdf")
 # test_simple_bayes()
